@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "dotnet_groomer": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7158"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 33138,
+      "useSSL": false
+    }
+  }
+}

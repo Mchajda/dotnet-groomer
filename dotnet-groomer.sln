@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-groomer", "dotnet-groomer\dotnet-groomer.csproj", "{FA51AFDA-8471-4038-9D43-CA9C6A351F18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-groomer-tests", "dotnet-groomer-tests\dotnet-groomer-tests.csproj", "{F70095ED-C603-415B-81C7-DB0FE0978C77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA51AFDA-8471-4038-9D43-CA9C6A351F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA51AFDA-8471-4038-9D43-CA9C6A351F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA51AFDA-8471-4038-9D43-CA9C6A351F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA51AFDA-8471-4038-9D43-CA9C6A351F18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70095ED-C603-415B-81C7-DB0FE0978C77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70095ED-C603-415B-81C7-DB0FE0978C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70095ED-C603-415B-81C7-DB0FE0978C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70095ED-C603-415B-81C7-DB0FE0978C77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97A321FC-7AD2-44F8-8C85-28E46513C499}
+	EndGlobalSection
+EndGlobal
