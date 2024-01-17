@@ -16,12 +16,14 @@ namespace dotnet_groomer
     {
         [FunctionName("GetProducts")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request to fetch users from MySQL.");
 
             string connectionString = Environment.GetEnvironmentVariable("MySqlConnectionString");
+            log.LogInformation($"{connectionString}");
+
             List<string> users = new List<string>();
 
             try
@@ -42,6 +44,7 @@ namespace dotnet_groomer
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
+                return new BadRequestObjectResult($"{connectionString} // {ex.Message}");
             }
 
             return new OkObjectResult(users);
