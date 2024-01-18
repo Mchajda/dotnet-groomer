@@ -19,3 +19,4 @@ docker.env
 .vs/dotnet-groomer/FileContentIndex/142ccfe9-54cc-4ba1-880a-1c5928728b1c.vsidx
 .vs/dotnet-groomer/FileContentIndex/b119136b-3aac-409f-93c4-1ee4bf80d364.vsidx
 .vs/dotnet-groomer/FileContentIndex/d73104a2-38eb-477e-82c5-aab9d031d985.vsidx
+*.vsidx
