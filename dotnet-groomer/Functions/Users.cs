@@ -8,19 +8,21 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using dotnet_groomer.Models;
+using Newtonsoft.Json;
+using System.IO;
 
-namespace dotnet_groomer
+namespace dotnet_groomer.Functions
 {
-    public class GetProducts
+    public class Users
     {
         private readonly MyDbContext _context;
 
-        public GetProducts(MyDbContext context)
+        public Users(MyDbContext context)
         {
             _context = context;
         }
 
-        [FunctionName("GetProducts")]
+        [FunctionName("GetUsers")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
@@ -38,6 +40,29 @@ namespace dotnet_groomer
             }
 
             return new OkObjectResult(users);
+        }
+
+        [FunctionName("PostUser")]
+        public async Task<IActionResult> PostUser(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var data = JsonConvert.DeserializeObject<User>(requestBody);
+
+            User user;
+            try
+            {
+                user = new User { Email = data.Email };
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"{ex.Message} // {ex.InnerException.Message}");
+            }
+
+            return new OkObjectResult(user);
         }
     }
 }
