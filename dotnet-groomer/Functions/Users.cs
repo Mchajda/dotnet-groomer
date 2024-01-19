@@ -23,7 +23,7 @@ namespace dotnet_groomer.Functions
         }
 
         [FunctionName("GetUsers")]
-        public async Task<IActionResult> Run(
+        public async Task<IActionResult> GetUsers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
