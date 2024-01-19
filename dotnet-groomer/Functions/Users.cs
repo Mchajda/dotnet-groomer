@@ -64,5 +64,35 @@ namespace dotnet_groomer.Functions
 
             return new OkObjectResult(user);
         }
+
+        [FunctionName("UpdateUser")]
+        public async Task<IActionResult> UpdateUser(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "UpdateUser/{userId}")] HttpRequest req,
+            ILogger log, int userId)
+        {
+            if (userId == null)
+            {
+                return new BadRequestObjectResult("user_id cannot be null");
+            }
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var data = JsonConvert.DeserializeObject<User>(requestBody);
+
+            User user;
+            try
+            {
+                user = await _context.Users.FindAsync(userId);
+
+                user.Email = data.Email;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(ex.Message);
+            }
+
+            return new OkObjectResult(user);
+        }
     }
 }
