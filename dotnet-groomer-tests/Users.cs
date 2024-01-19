@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 namespace dotnet_groomer_tests
 {
     [TestClass]
-    public class UnitTest1
+    public class Users
     {
         [TestMethod]
         public async Task PostUser_ShouldAddUser_WhenCalledWithValidData()
@@ -20,7 +20,7 @@ namespace dotnet_groomer_tests
             // Arrange
             var dbContext = CreateDbContext();
             var logger = Mock.Of<ILogger>();
-            var function = new Users(dbContext);
+            var function = new dotnet_groomer.Functions.Users(dbContext);
             var userJson = "{\"email\":\"test@example.com\"}";
 
             // Act
@@ -44,7 +44,7 @@ namespace dotnet_groomer_tests
             var dbContext = CreateDbContext();
             PopulateDatabaseWithUsers(dbContext);
             var logger = Mock.Of<ILogger>();
-            var function = new Users(dbContext);
+            var function = new dotnet_groomer.Functions.Users(dbContext);
             var request = new DefaultHttpContext().Request;
 
             // Act
@@ -71,7 +71,7 @@ namespace dotnet_groomer_tests
             return new MyDbContext(options);
         }
 
-        private async static Task<ObjectResult> AddUserToDatabase(MyDbContext dbContext, Users function, ILogger logger, string userJson)
+        private async static Task<ObjectResult> AddUserToDatabase(MyDbContext dbContext, dotnet_groomer.Functions.Users function, ILogger logger, string userJson)
         {
             var httpContext = new DefaultHttpContext();
             var request = httpContext.Request;
