@@ -72,7 +72,7 @@ namespace dotnet_groomer.Functions
         {
             if (userId == null)
             {
-                return new BadRequestObjectResult("user_id cannot be null");
+                return new NotFoundObjectResult("user_id cannot be null");
             }
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -93,6 +93,32 @@ namespace dotnet_groomer.Functions
             }
 
             return new OkObjectResult(user);
+        }
+
+        [FunctionName("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "DeleteUser/{userId}")] HttpRequest req,
+            ILogger log, int userId)
+        {
+            if (userId == null)
+            {
+                return new NotFoundObjectResult("user_id cannot be null");
+            }
+
+            User user;
+            try
+            {
+                user = await _context.Users.FindAsync(userId);
+
+                _context.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(ex.Message);
+            }
+
+            return new OkObjectResult("User was removed correctly");
         }
     }
 }
