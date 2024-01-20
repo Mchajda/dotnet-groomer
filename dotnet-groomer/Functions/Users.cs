@@ -53,7 +53,14 @@ namespace dotnet_groomer.Functions
             User user;
             try
             {
-                user = new User { Email = data.Email };
+                user = new User { 
+                    Email = data.Email,
+                    Name = data.Name,
+                    Dog = data.Dog,
+                    VisitCount = data.VisitCount,
+                    PhoneNumber = data.PhoneNumber,
+                };
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
             }
