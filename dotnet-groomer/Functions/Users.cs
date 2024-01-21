@@ -75,7 +75,7 @@ namespace dotnet_groomer.Functions
         [FunctionName("UpdateUser")]
         public async Task<IActionResult> UpdateUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "UpdateUser/{userId}")] HttpRequest req,
-            ILogger log, int userId)
+            ILogger log, int? userId)
         {
             if (userId == null)
             {
@@ -91,12 +91,16 @@ namespace dotnet_groomer.Functions
                 user = await _context.Users.FindAsync(userId);
 
                 user.Email = data.Email;
+                user.Name = data.Name;
+                user.Dog = data.Dog;
+                user.VisitCount = data.VisitCount;
+                user.PhoneNumber = data.PhoneNumber;
 
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                return new NotFoundObjectResult(ex.Message);
+                return new BadRequestObjectResult($"{ex.Message} // {ex.InnerException.Message}");
             }
 
             return new OkObjectResult(user);
@@ -105,7 +109,7 @@ namespace dotnet_groomer.Functions
         [FunctionName("DeleteUser")]
         public async Task<IActionResult> DeleteUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "DeleteUser/{userId}")] HttpRequest req,
-            ILogger log, int userId)
+            ILogger log, int? userId)
         {
             if (userId == null)
             {
@@ -122,7 +126,7 @@ namespace dotnet_groomer.Functions
             }
             catch (Exception ex)
             {
-                return new NotFoundObjectResult(ex.Message);
+                return new BadRequestObjectResult($"{ex.Message} // {ex.InnerException.Message}");
             }
 
             return new OkObjectResult("User was removed correctly");

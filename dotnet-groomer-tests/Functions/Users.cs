@@ -9,7 +9,7 @@ using dotnet_groomer.Functions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
-namespace dotnet_groomer_tests
+namespace dotnet_groomer_tests.Functions
 {
     [TestClass]
     public class Users
@@ -127,7 +127,7 @@ namespace dotnet_groomer_tests
             var request = httpContext.Request;
             request.Body = new MemoryStream(Encoding.UTF8.GetBytes(userJson));
 
-            if(userId == -1)
+            if (userId == -1)
             {
                 return await function.PostUser(request, logger) as ObjectResult;
             }
