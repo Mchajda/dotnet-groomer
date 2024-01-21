@@ -5,9 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Text;
-using dotnet_groomer.Functions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using System.Text.Json;
 
 namespace dotnet_groomer_tests.Functions
@@ -46,15 +43,15 @@ namespace dotnet_groomer_tests.Functions
             // Arrange
             var dbContext = CreateDbContext();
             var logger = Mock.Of<ILogger>();
-            var function = new dotnet_groomer.Functions.Users(dbContext);
+            var function = new dotnet_groomer.Functions.Visits(dbContext);
 
             var visit = new Visit
             {
                 Id = 1,
                 Title = "Test Visit",
-                StartDate = "2024-01-06T07:30:00+01:00",
-                EndDate = "2024-01-06T08:00:00+01:00",
-                IsAllDay = false
+                Start = "2024-01-06T07:30:00+01:00",
+                End = "2024-01-06T08:00:00+01:00",
+                AllDay = false
             };
 
             // Act
@@ -86,9 +83,9 @@ namespace dotnet_groomer_tests.Functions
             {
                 Id = 1,
                 Title = "Test Visit 2",
-                StartDate = "2024-01-06T07:30:00+01:00",
-                EndDate = "2024-01-06T08:00:00+01:00",
-                IsAllDay = false
+                Start = "2024-01-06T07:30:00+01:00",
+                End = "2024-01-06T08:00:00+01:00",
+                AllDay = false
             };
 
             // Act
@@ -162,9 +159,9 @@ namespace dotnet_groomer_tests.Functions
             {
                 Id = 1,
                 Title = "Test Visit",
-                StartDate = "2024-01-06T07:30:00+01:00",
-                EndDate = "2024-01-06T08:00:00+01:00",
-                IsAllDay = false
+                Start = "2024-01-06T07:30:00+01:00",
+                End = "2024-01-06T08:00:00+01:00",
+                AllDay = false
             });
             dbContext.SaveChanges();
         }

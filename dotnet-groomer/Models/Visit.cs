@@ -9,11 +9,12 @@ namespace dotnet_groomer.Models
         public string Title { get; set; }
 
         [Column("start_date")]
-        public string StartDate { get; set; }
+        public string Start { get; set; }
 
         [Column("end_date")]
-        public string EndDate { get; set; }
-        
-        public bool IsAllDay { get; set; }
+        public string End { get; set; }
+
+        [Column("is_all_day")]
+        public bool AllDay { get; set; }
     }
 }

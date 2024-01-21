@@ -5,9 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Text;
-using dotnet_groomer.Functions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
 namespace dotnet_groomer_tests.Functions
 {
