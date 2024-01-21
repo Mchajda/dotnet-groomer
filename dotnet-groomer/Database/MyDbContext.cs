@@ -10,6 +10,8 @@ public class MyDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Visit> Visits { get; set; }
 
+    public DbSet<Product> Products { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -17,5 +19,6 @@ public class MyDbContext : DbContext
         // Configure the User entity to map to the "users" table
         modelBuilder.Entity<User>().ToTable("users");
         modelBuilder.Entity<Visit>().ToTable("visits");
+        modelBuilder.Entity<Product>().ToTable("products");
     }
 }
