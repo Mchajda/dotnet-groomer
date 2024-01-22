@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace dotnet_groomer.Models
 {
@@ -9,10 +10,10 @@ namespace dotnet_groomer.Models
         public string Title { get; set; }
 
         [Column("start_date")]
-        public string Start { get; set; }
+        public DateTime Start { get; set; }
 
         [Column("end_date")]
-        public string End { get; set; }
+        public DateTime End { get; set; }
 
         [Column("is_all_day")]
         public bool AllDay { get; set; }

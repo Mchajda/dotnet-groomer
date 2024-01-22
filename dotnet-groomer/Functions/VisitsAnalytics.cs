@@ -36,29 +36,47 @@ namespace dotnet_groomer.Functions
             try
             {
                 var ci = CultureInfo.InvariantCulture;
-                var calendar = ci.Calendar;
-                var firstDayOfWeek = ci.DateTimeFormat.FirstDayOfWeek;
+                var (weekStart, weekEnd) = GetStartAndEndDateOfWeek(year, weekNumber, ci);
 
-                visits = await _context.Visits
-                    .Where(visit =>
-                        calendar.GetYear(DateTime.Parse(visit.Start)) == year &&
-                        calendar.GetWeekOfYear(DateTime.Parse(visit.Start), CalendarWeekRule.FirstFourDayWeek, firstDayOfWeek) == weekNumber)
+                var visitsInWeek = await _context.Visits
+                    .Where(visit => visit.Start >= weekStart && visit.Start < weekEnd)
                     .ToListAsync();
 
                 var groupedVisits = Enumerable.Range(0, 7)
                     .ToDictionary(day => day, day => new List<Visit>());
 
-                foreach (var group in visits.GroupBy(visit => (int)DateTime.Parse(visit.Start).DayOfWeek))
+                foreach (var group in visitsInWeek.GroupBy(visit => (int)visit.Start.DayOfWeek))
                 {
                     groupedVisits[group.Key] = group.ToList();
                 }
 
-                return new OkObjectResult(visits);
+                return new OkObjectResult(groupedVisits);
             }
             catch (Exception ex)
             {
                 return new NotFoundObjectResult(ex.Message);
             }
+        }
+
+        public (DateTime, DateTime) GetStartAndEndDateOfWeek(int year, int weekNumber, CultureInfo ci)
+        {
+            var jan1 = new DateTime(year, 1, 1);
+            var daysOffset = DayOfWeek.Monday - jan1.DayOfWeek;
+            var firstMonday = jan1.AddDays(daysOffset);
+
+            var cal = ci.Calendar;
+            var firstWeek = cal.GetWeekOfYear(jan1, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+            var weekNum = weekNumber;
+            if (firstWeek <= 1)
+            {
+                weekNum -= 1;
+            }
+
+            var resultStart = firstMonday.AddDays(weekNum * 7);
+            var resultEnd = resultStart.AddDays(7).AddTicks(-1);
+
+            return (resultStart, resultEnd);
         }
     }
 }
