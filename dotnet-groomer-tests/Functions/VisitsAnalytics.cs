@@ -26,7 +26,7 @@ namespace dotnet_groomer_tests.Functions
             var result = await function.GetVisitsForWeek(request, logger, 2024, 1) as ObjectResult;
             var visits = result.Value as IEnumerable<Visit>;
 
-            var result2 = await function.GetVisitsForWeek(request, logger, 2024, 2) as ObjectResult;
+            var result2 = await function.GetVisitsForWeek(request, logger, 2024, 3) as ObjectResult;
             var visits2 = result2.Value as IEnumerable<Visit>;
 
             // Assert
@@ -55,12 +55,28 @@ namespace dotnet_groomer_tests.Functions
         private static void PopulateDatabaseWithVisits(MyDbContext dbContext)
         {
             // Add users directly to dbContext for testing GetUsers
-            dbContext.Visits.Add(new Visit
+            dbContext.Visits.AddRange(new Visit
             {
                 Id = 1,
                 Title = "Test Visit",
                 Start = "2024-01-06T07:30:00+01:00",
                 End = "2024-01-06T08:00:00+01:00",
+                AllDay = false
+            },
+            new Visit
+            {
+                Id = 2,
+                Title = "Test Visit",
+                Start = "2024-01-06T09:30:00+01:00",
+                End = "2024-01-06T10:00:00+01:00",
+                AllDay = false
+            },
+            new Visit
+            {
+                Id = 3,
+                Title = "Test Visit",
+                Start = "2024-01-07T07:30:00+01:00",
+                End = "2024-01-07T08:00:00+01:00",
                 AllDay = false
             });
             dbContext.SaveChanges();
