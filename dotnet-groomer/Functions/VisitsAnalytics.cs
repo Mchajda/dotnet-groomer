@@ -48,7 +48,6 @@ namespace dotnet_groomer.Functions
                 var groupedVisits = Enumerable.Range(0, 7)
                     .ToDictionary(day => day, day => new List<Visit>());
 
-                // Group the visits by day of the week and add them to the dictionary
                 foreach (var group in visits.GroupBy(visit => (int)DateTime.Parse(visit.Start).DayOfWeek))
                 {
                     groupedVisits[group.Key] = group.ToList();
