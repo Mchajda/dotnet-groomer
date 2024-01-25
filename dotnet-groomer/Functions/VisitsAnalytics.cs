@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using dotnet_groomer.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Globalization;
 using System.Linq;
-
+using dotnet_groomer.Models.Visit;
 
 namespace dotnet_groomer.Functions
 {

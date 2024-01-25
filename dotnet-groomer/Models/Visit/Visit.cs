@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dotnet_groomer.Models
+namespace dotnet_groomer.Models.Visit
 {
     public class Visit
     {
@@ -17,5 +18,7 @@ namespace dotnet_groomer.Models
 
         [Column("is_all_day")]
         public bool AllDay { get; set; }
+
+        public List<VisitProduct> VisitProducts { get; set; }
     }
 }
