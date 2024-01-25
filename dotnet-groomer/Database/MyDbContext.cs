@@ -22,7 +22,8 @@ public class MyDbContext : DbContext
         modelBuilder.Entity<Product>().ToTable("products");
 
         modelBuilder.Entity<VisitProduct>()
-        .HasKey(vp => new { vp.VisitId, vp.ProductId });
+            .ToTable("visit_products")
+            .HasKey(vp => new { vp.VisitId, vp.ProductId });
 
         modelBuilder.Entity<VisitProduct>()
             .HasOne(vp => vp.Visit)

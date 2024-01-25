@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IO;
 using dotnet_groomer.Models.Visit;
+using dotnet_groomer.Models;
 
 namespace dotnet_groomer.Functions
 {
@@ -48,7 +49,7 @@ namespace dotnet_groomer.Functions
             ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<Visit>(requestBody);
+            var data = JsonConvert.DeserializeObject<VisitRequestBody>(requestBody);
 
             Visit visit;
             try
@@ -57,8 +58,14 @@ namespace dotnet_groomer.Functions
                     Title = data.Title,
                     Start = data.Start,
                     End = data.End,
-                    AllDay = data.AllDay
+                    AllDay = data.AllDay,
+                    VisitProducts = new List<VisitProduct>()
                 };
+
+                foreach (var productId in data.ProductIds)
+                {
+                    visit.VisitProducts.Add(new VisitProduct { ProductId = productId.Id });
+                }
 
                 _context.Visits.Add(visit);
                 await _context.SaveChangesAsync();

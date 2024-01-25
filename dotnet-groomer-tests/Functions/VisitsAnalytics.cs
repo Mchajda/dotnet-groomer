@@ -59,24 +59,24 @@ namespace dotnet_groomer_tests.Functions
             {
                 Id = 1,
                 Title = "Test Visit",
-                Start = "2024-01-06T07:30:00+01:00",
-                End = "2024-01-06T08:00:00+01:00",
+                Start = DateTime.Parse("2024-01-06T07:30:00+01:00"),
+                End = DateTime.Parse("2024-01-06T08:00:00+01:00"),
                 AllDay = false
             },
             new Visit
             {
                 Id = 2,
                 Title = "Test Visit",
-                Start = "2024-01-06T09:30:00+01:00",
-                End = "2024-01-06T10:00:00+01:00",
+                Start = DateTime.Parse("2024-01-06T09:30:00+01:00"),
+                End = DateTime.Parse("2024-01-06T10:00:00+01:00"),
                 AllDay = false
             },
             new Visit
             {
                 Id = 3,
                 Title = "Test Visit",
-                Start = "2024-01-07T07:30:00+01:00",
-                End = "2024-01-07T08:00:00+01:00",
+                Start = DateTime.Parse("2024-01-07T07:30:00+01:00"),
+                End = DateTime.Parse("2024-01-07T08:00:00+01:00"),
                 AllDay = false
             });
             dbContext.SaveChanges();
