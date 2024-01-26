@@ -24,10 +24,10 @@ namespace dotnet_groomer_tests.Functions
 
             // Act
             var result = await function.GetVisitsForWeek(request, logger, 2024, 1) as ObjectResult;
-            var visits = result.Value as IEnumerable<Visit>;
+            var visits = result?.Value as Dictionary<int, List<Visit>>;
 
             var result2 = await function.GetVisitsForWeek(request, logger, 2024, 3) as ObjectResult;
-            var visits2 = result2.Value as IEnumerable<Visit>;
+            var visits2 = result2?.Value as Dictionary<int, List<Visit>>;
 
             // Assert
             Assert.IsNotNull(result);
@@ -36,8 +36,8 @@ namespace dotnet_groomer_tests.Functions
             Assert.IsNotNull(visits);
             Assert.IsTrue(visits.Any());
 
-            Assert.AreEqual(0, visits2.Count());
-            Assert.IsFalse(visits2.Any());
+            Assert.AreEqual(0, visits2[0].Count);
+            Assert.AreEqual(1, visits[0].Count);
 
             // Cleanup
             dbContext.Database.EnsureDeleted();

@@ -79,7 +79,7 @@ namespace dotnet_groomer_tests.Functions
             var function = new dotnet_groomer.Functions.Visits(dbContext);
             var request = new DefaultHttpContext().Request;
 
-            var visit = new Visit
+            var visit = new VisitRequestBody
             {
                 Id = 1,
                 Title = "Test Visit 2",

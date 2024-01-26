@@ -62,9 +62,12 @@ namespace dotnet_groomer.Functions
                     VisitProducts = new List<VisitProduct>()
                 };
 
-                foreach (var productId in data.ProductIds)
+                if (data.ProductIds != null)
                 {
-                    visit.VisitProducts.Add(new VisitProduct { ProductId = productId.Id });
+                    foreach (var productId in data.ProductIds)
+                    {
+                        visit.VisitProducts.Add(new VisitProduct { ProductId = productId.Id });
+                    }
                 }
 
                 _context.Visits.Add(visit);
