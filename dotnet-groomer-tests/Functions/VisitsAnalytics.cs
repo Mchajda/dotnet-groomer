@@ -43,6 +43,33 @@ namespace dotnet_groomer_tests.Functions
             dbContext.Database.EnsureDeleted();
         }
 
+        [TestMethod]
+        public async Task GetIncomeForWeek_ShouldReturnIncome_WhenCalledWithValidData()
+        {
+            // Arrange
+            var dbContext = CreateDbContext();
+            PopulateDatabaseWithVisits(dbContext);
+            var logger = Mock.Of<ILogger>();
+            var function = new dotnet_groomer.Functions.VisitsAnalytics(dbContext);
+            var request = new DefaultHttpContext().Request;
+
+            // Act
+            var result = await function.GetIncomeForWeek(request, logger, 2024, 1) as ObjectResult;
+            var visits = result?.Value as Dictionary<int, int>;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
+
+            Assert.IsNotNull(visits);
+            Assert.IsTrue(visits.Any());
+            Assert.AreEqual(200, visits[0]);
+            Assert.AreEqual(400, visits[6]);
+
+            // Cleanup
+            dbContext.Database.EnsureDeleted();
+        }
+
         private static MyDbContext CreateDbContext()
         {
             var options = new DbContextOptionsBuilder<MyDbContext>()
@@ -61,7 +88,8 @@ namespace dotnet_groomer_tests.Functions
                 Title = "Test Visit",
                 Start = DateTime.Parse("2024-01-06T07:30:00+01:00"),
                 End = DateTime.Parse("2024-01-06T08:00:00+01:00"),
-                AllDay = false
+                AllDay = false,
+                Price = 200
             },
             new Visit
             {
@@ -69,7 +97,8 @@ namespace dotnet_groomer_tests.Functions
                 Title = "Test Visit",
                 Start = DateTime.Parse("2024-01-06T09:30:00+01:00"),
                 End = DateTime.Parse("2024-01-06T10:00:00+01:00"),
-                AllDay = false
+                AllDay = false,
+                Price = 200
             },
             new Visit
             {
@@ -77,7 +106,8 @@ namespace dotnet_groomer_tests.Functions
                 Title = "Test Visit",
                 Start = DateTime.Parse("2024-01-07T07:30:00+01:00"),
                 End = DateTime.Parse("2024-01-07T08:00:00+01:00"),
-                AllDay = false
+                AllDay = false,
+                Price = 200
             });
             dbContext.SaveChanges();
         }

@@ -19,6 +19,8 @@ namespace dotnet_groomer.Models.Visit
         [Column("is_all_day")]
         public bool AllDay { get; set; }
 
+        public int Price { get; set; }
+
         public List<VisitProduct> VisitProducts { get; set; }
     }
 }

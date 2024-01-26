@@ -57,6 +57,45 @@ namespace dotnet_groomer.Functions
             }
         }
 
+        [FunctionName("GetIncomeForWeek")]
+        public async Task<IActionResult> GetIncomeForWeek(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetIncomeForWeek/{year}/{weekNumber}")] HttpRequest req,
+            ILogger log, int year, int weekNumber)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request to fetch visits from MySQL.");
+
+            List<Visit> visits = null;
+            try
+            {
+                var ci = CultureInfo.InvariantCulture;
+                var (weekStart, weekEnd) = GetStartAndEndDateOfWeek(year, weekNumber, ci);
+
+                var visitsInWeek = await _context.Visits
+                    .Where(visit => visit.Start >= weekStart && visit.Start < weekEnd)
+                    .ToListAsync();
+
+                var groupedVisits = Enumerable.Range(0, 7)
+                    .ToDictionary(day => day, day => new int());
+
+                foreach (var group in visitsInWeek.GroupBy(visit => (int)visit.Start.DayOfWeek))
+                {
+                    int sum = 0;
+                    foreach (var item in group.ToList())
+                    {
+                        sum += item.Price;
+                    }
+
+                    groupedVisits[group.Key] = sum;
+                }
+
+                return new OkObjectResult(groupedVisits);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(ex.Message);
+            }
+        }
+
         public (DateTime, DateTime) GetStartAndEndDateOfWeek(int year, int weekNumber, CultureInfo ci)
         {
             var jan1 = new DateTime(year, 1, 1);
