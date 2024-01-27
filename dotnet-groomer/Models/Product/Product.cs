@@ -1,6 +1,6 @@
 ﻿using dotnet_groomer.Models.Visit;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace dotnet_groomer.Models
 {
@@ -10,7 +10,6 @@ namespace dotnet_groomer.Models
         public string Name { get; set; }
         public int Price { get; set; }
         public int Time { get; set; }
-
         public List<VisitProduct> VisitProducts { get; set; }
     }
 }

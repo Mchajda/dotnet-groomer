@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using dotnet_groomer.Models;
 using Newtonsoft.Json;
 using System.IO;
+using dotnet_groomer.Models;
 
 namespace dotnet_groomer.Functions
 {

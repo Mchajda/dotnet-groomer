@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace dotnet_groomer.Models.Visit
 {
@@ -20,7 +21,7 @@ namespace dotnet_groomer.Models.Visit
         public bool AllDay { get; set; }
 
         public int Price { get; set; }
-
+        
         public List<VisitProduct> VisitProducts { get; set; }
     }
 }

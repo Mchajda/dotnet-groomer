@@ -111,16 +111,28 @@ namespace dotnet_groomer.Functions
                 var (monthStart, monthEnd) = GetStartAndEndDateOfMonth(year, month);
 
                 var visitsInMonth = await _context.Visits
+                    .Include(visit => visit.VisitProducts)
+                        .ThenInclude(visitProduct => visitProduct.Product)
                     .Where(visit => visit.Start >= monthStart && visit.Start < monthEnd)
                     .ToListAsync();
 
-                DateTime iteratorDate = monthEnd;
+                DateTimeOffset iteratorDate = monthEnd;
                 List<VisitsForMonthResponseItem> visitsGroupped = new();
 
-                while (iteratorDate >= monthStart)
+                while (iteratorDate > monthStart)
                 {
                     var dayVisits = visitsInMonth
                         .Where(visit => visit.Start >= iteratorDate && visit.Start < iteratorDate.AddDays(1))
+                        .Select(visit => new VisitDto
+                        {
+                            Id = visit.Id,
+                            Title = visit.Title,
+                            Products = visit.VisitProducts.Select(vp => new ProductDto
+                            {
+                                Id = vp.Product.Id,
+                                Name = vp.Product.Name,
+                            }).ToList()
+                        })
                         .ToList();
 
                     if (withoutEmpty == "true")
@@ -129,7 +141,7 @@ namespace dotnet_groomer.Functions
                         {
                             visitsGroupped.Add(new VisitsForMonthResponseItem
                             {
-                                Date = iteratorDate,
+                                Date = iteratorDate.ToString("yyyy-MM-dd"),
                                 Visits = dayVisits
                             });
                         }
@@ -138,7 +150,7 @@ namespace dotnet_groomer.Functions
                     {
                         visitsGroupped.Add(new VisitsForMonthResponseItem
                         {
-                            Date = iteratorDate,
+                            Date = iteratorDate.ToString("yyyy-MM-dd"),
                             Visits = dayVisits
                         });
                     }
@@ -146,7 +158,14 @@ namespace dotnet_groomer.Functions
                     iteratorDate = iteratorDate.AddDays(-1);
                 }
 
-                return new OkObjectResult(visitsGroupped);
+                try
+                {
+                    return new OkObjectResult(visitsGroupped);
+                }
+                catch (Exception ex)
+                {
+                    return new NotFoundObjectResult(ex.Message);
+                }
             }
             catch (Exception ex)
             {
@@ -156,8 +175,8 @@ namespace dotnet_groomer.Functions
 
         public class VisitsForMonthResponseItem
         {
-            public DateTimeOffset Date { get; set; }
-            public List<Visit> Visits { get; set; }
+            public string Date { get; set; }
+            public List<VisitDto> Visits { get; set; }
         }
 
         // TO DO: move it to utils
