@@ -46,7 +46,8 @@ namespace dotnet_groomer.Functions
 
                 foreach (var group in visitsInWeek.GroupBy(visit => (int)visit.Start.DayOfWeek))
                 {
-                    groupedVisits[group.Key] = group.ToList();
+                    int dayIndex = group.Key == 0 ? 6 : group.Key - 1;
+                    groupedVisits[dayIndex] = group.ToList();
                 }
 
                 return new OkObjectResult(groupedVisits);
@@ -85,7 +86,8 @@ namespace dotnet_groomer.Functions
                         sum += item.Price;
                     }
 
-                    groupedVisits[group.Key] = sum;
+                    int dayIndex = group.Key == 0 ? 6 : group.Key - 1;
+                    groupedVisits[dayIndex] = sum;
                 }
 
                 return new OkObjectResult(groupedVisits);
@@ -96,6 +98,69 @@ namespace dotnet_groomer.Functions
             }
         }
 
+        [FunctionName("GetVisitsForMonth")]
+        public async Task<IActionResult> GetVisitsForMonth(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetVisitsForMonth/{year}/{month}")] HttpRequest req,
+            ILogger log, int year, int month)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request to fetch visits from MySQL.");
+            string withoutEmpty = req.Query["leaveEmpty"];
+
+            try
+            {
+                var (monthStart, monthEnd) = GetStartAndEndDateOfMonth(year, month);
+
+                var visitsInMonth = await _context.Visits
+                    .Where(visit => visit.Start >= monthStart && visit.Start < monthEnd)
+                    .ToListAsync();
+
+                DateTime iteratorDate = monthEnd;
+                List<VisitsForMonthResponseItem> visitsGroupped = new();
+
+                while (iteratorDate >= monthStart)
+                {
+                    var dayVisits = visitsInMonth
+                        .Where(visit => visit.Start >= iteratorDate && visit.Start < iteratorDate.AddDays(1))
+                        .ToList();
+
+                    if (withoutEmpty == "true")
+                    {
+                        if (dayVisits.Count > 0)
+                        {
+                            visitsGroupped.Add(new VisitsForMonthResponseItem
+                            {
+                                Date = iteratorDate,
+                                Visits = dayVisits
+                            });
+                        }
+                    }
+                    else
+                    {
+                        visitsGroupped.Add(new VisitsForMonthResponseItem
+                        {
+                            Date = iteratorDate,
+                            Visits = dayVisits
+                        });
+                    }
+
+                    iteratorDate = iteratorDate.AddDays(-1);
+                }
+
+                return new OkObjectResult(visitsGroupped);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(ex.Message);
+            }
+        }
+
+        public class VisitsForMonthResponseItem
+        {
+            public DateTimeOffset Date { get; set; }
+            public List<Visit> Visits { get; set; }
+        }
+
+        // TO DO: move it to utils
         public (DateTime, DateTime) GetStartAndEndDateOfWeek(int year, int weekNumber, CultureInfo ci)
         {
             var jan1 = new DateTime(year, 1, 1);
@@ -115,6 +180,12 @@ namespace dotnet_groomer.Functions
             var resultEnd = resultStart.AddDays(7).AddTicks(-1);
 
             return (resultStart, resultEnd);
+        }
+
+        public (DateTime, DateTime) GetStartAndEndDateOfMonth(int year, int month)
+        {
+            var lastDayOfMonth = DateTime.DaysInMonth(year, month);
+            return (DateTime.Parse($"{year}-{month}-01"), DateTime.Parse($"{year}-{month}-{lastDayOfMonth}"));
         }
     }
 }

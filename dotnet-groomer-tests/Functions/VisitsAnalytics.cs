@@ -37,7 +37,7 @@ namespace dotnet_groomer_tests.Functions
             Assert.IsTrue(visits.Any());
 
             Assert.AreEqual(0, visits2[0].Count);
-            Assert.AreEqual(1, visits[0].Count);
+            Assert.AreEqual(1, visits[6].Count);
 
             // Cleanup
             dbContext.Database.EnsureDeleted();
@@ -63,8 +63,33 @@ namespace dotnet_groomer_tests.Functions
 
             Assert.IsNotNull(visits);
             Assert.IsTrue(visits.Any());
-            Assert.AreEqual(200, visits[0]);
-            Assert.AreEqual(400, visits[6]);
+            Assert.AreEqual(200, visits[6]);
+            Assert.AreEqual(400, visits[5]);
+
+            // Cleanup
+            dbContext.Database.EnsureDeleted();
+        }
+
+        [TestMethod]
+        public async Task GetVisitsForMonth_ShouldReturnVisits_WhenCalledWithValidData()
+        {
+            // Arrange
+            var dbContext = CreateDbContext();
+            PopulateDatabaseWithVisits(dbContext);
+            var logger = Mock.Of<ILogger>();
+            var function = new dotnet_groomer.Functions.VisitsAnalytics(dbContext);
+            var request = new DefaultHttpContext().Request;
+
+            // Act
+            var result = await function.GetVisitsForMonth(request, logger, 2024, 1) as ObjectResult;
+            var visits = result?.Value as Dictionary<DateTime, List<Visit>>;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
+
+            Assert.IsNotNull(visits);
+            Assert.IsTrue(visits.Any());
 
             // Cleanup
             dbContext.Database.EnsureDeleted();
