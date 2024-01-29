@@ -92,17 +92,30 @@ namespace dotnet_groomer.Functions
             }
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<Visit>(requestBody);
+            var data = JsonConvert.DeserializeObject<VisitRequestBody>(requestBody);
 
             Visit visit;
             try
             {
-                visit = await _context.Visits.FindAsync(visitId);
+                visit = await _context.Visits
+                                .Include(v => v.VisitProducts)
+                                .FirstOrDefaultAsync(v => v.Id == visitId);
 
                 visit.Title = data.Title;
                 visit.Start = data.Start;
                 visit.End = data.End;
                 visit.AllDay = data.AllDay;
+                visit.PaymentCleared = data.PaymentCleared;
+
+                visit.VisitProducts.Clear();
+
+                if (data.ProductIds != null)
+                {
+                    foreach (var productId in data.ProductIds)
+                    {
+                        visit.VisitProducts.Add(new VisitProduct { ProductId = productId.Id });
+                    }
+                }
 
                 await _context.SaveChangesAsync();
             }

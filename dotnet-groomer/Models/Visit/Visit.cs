@@ -21,7 +21,10 @@ namespace dotnet_groomer.Models.Visit
         public bool AllDay { get; set; }
 
         public int Price { get; set; }
-        
+
+        [Column("cleared")]
+        public bool PaymentCleared { get; set; } = false;
+
         public List<VisitProduct> VisitProducts { get; set; }
     }
 }

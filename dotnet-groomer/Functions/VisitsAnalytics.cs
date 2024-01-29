@@ -119,7 +119,7 @@ namespace dotnet_groomer.Functions
                 DateTimeOffset iteratorDate = monthEnd;
                 List<VisitsForMonthResponseItem> visitsGroupped = new();
 
-                while (iteratorDate > monthStart)
+                while (iteratorDate >= monthStart)
                 {
                     var dayVisits = visitsInMonth
                         .Where(visit => visit.Start >= iteratorDate && visit.Start < iteratorDate.AddDays(1))
@@ -158,14 +158,8 @@ namespace dotnet_groomer.Functions
                     iteratorDate = iteratorDate.AddDays(-1);
                 }
 
-                try
-                {
-                    return new OkObjectResult(visitsGroupped);
-                }
-                catch (Exception ex)
-                {
-                    return new NotFoundObjectResult(ex.Message);
-                }
+                return new OkObjectResult(visitsGroupped);
+
             }
             catch (Exception ex)
             {
