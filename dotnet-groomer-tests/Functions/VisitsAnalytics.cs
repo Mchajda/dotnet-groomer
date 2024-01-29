@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Text;
 using System.Text.Json;
+using static dotnet_groomer.Functions.VisitsAnalytics;
 
 namespace dotnet_groomer_tests.Functions
 {
@@ -79,17 +80,18 @@ namespace dotnet_groomer_tests.Functions
             var logger = Mock.Of<ILogger>();
             var function = new dotnet_groomer.Functions.VisitsAnalytics(dbContext);
             var request = new DefaultHttpContext().Request;
+            request.QueryString.Add("leaveEmpty", "true");
 
             // Act
             var result = await function.GetVisitsForMonth(request, logger, 2024, 1) as ObjectResult;
-            var visits = result?.Value as Dictionary<DateTime, List<Visit>>;
+            var visits = result?.Value as List<VisitsForMonthResponseItem>;
 
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
 
             Assert.IsNotNull(visits);
-            Assert.IsTrue(visits.Any());
+            Assert.AreEqual(2, visits[25].Visits.Count);
 
             // Cleanup
             dbContext.Database.EnsureDeleted();

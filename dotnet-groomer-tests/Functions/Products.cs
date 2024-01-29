@@ -1,4 +1,4 @@
-using dotnet_groomer.Models.Product;
+using dotnet_groomer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

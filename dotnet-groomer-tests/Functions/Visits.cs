@@ -85,7 +85,8 @@ namespace dotnet_groomer_tests.Functions
                 Title = "Test Visit 2",
                 Start = DateTime.Parse("2024-01-06T07:30:00+01:00"),
                 End = DateTime.Parse("2024-01-06T08:00:00+01:00"),
-                AllDay = false
+                AllDay = false,
+                PaymentCleared = true
             };
 
             // Act
@@ -98,6 +99,7 @@ namespace dotnet_groomer_tests.Functions
             var returnedVisit = result.Value as Visit;
             Assert.IsNotNull(returnedVisit);
             Assert.AreEqual("Test Visit 2", returnedVisit.Title);
+            Assert.IsTrue(returnedVisit.PaymentCleared);
 
             // Cleanup
             dbContext.Database.EnsureDeleted();
