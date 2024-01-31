@@ -127,6 +127,9 @@ namespace dotnet_groomer.Functions
                         {
                             Id = visit.Id,
                             Title = visit.Title,
+                            Start = visit.Start,
+                            End = visit.End,
+                            PaymentCleared = visit.PaymentCleared,
                             Products = visit.VisitProducts.Select(vp => new ProductDto
                             {
                                 Id = vp.Product.Id,

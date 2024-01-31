@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.IO;
 using dotnet_groomer.Models.Visit;
 using dotnet_groomer.Models;
+using System.Linq;
 
 namespace dotnet_groomer.Functions
 {
@@ -101,7 +102,7 @@ namespace dotnet_groomer.Functions
                                 .Include(v => v.VisitProducts)
                                 .FirstOrDefaultAsync(v => v.Id == visitId);
 
-                visit.Title = data.Title;
+                visit.Title = data.Title ?? visit.Title;
                 visit.Start = data.Start;
                 visit.End = data.End;
                 visit.AllDay = data.AllDay;
@@ -111,9 +112,15 @@ namespace dotnet_groomer.Functions
 
                 if (data.ProductIds != null)
                 {
-                    foreach (var productId in data.ProductIds)
+                    var productIds = data.ProductIds.Select(x => x.Id);
+
+                    var productsToAdd = await _context.Products
+                        .Where(product => productIds.Contains(product.Id))
+                        .ToListAsync();
+
+                    foreach (var product in productsToAdd)
                     {
-                        visit.VisitProducts.Add(new VisitProduct { ProductId = productId.Id });
+                        visit.VisitProducts.Add(new VisitProduct { ProductId = product.Id, VisitId = visit.Id });
                     }
                 }
 
@@ -124,7 +131,21 @@ namespace dotnet_groomer.Functions
                 return new BadRequestObjectResult($"{ex.Message} // {ex.InnerException.Message}");
             }
 
-            return new OkObjectResult(visit);
+            return new OkObjectResult(new VisitDto()
+            {
+                Title = visit.Title,
+                Start = visit.Start,
+                End = visit.End,
+                AllDay = visit.AllDay,
+                PaymentCleared = visit.PaymentCleared,
+                Price = visit.Price,
+                Products = visit.VisitProducts.Select(vp => new ProductDto
+                {
+                    Id = vp.Product.Id,
+                    Name = vp.Product.Name,
+                }).ToList(),
+                Id = visit.Id,
+            });
         }
 
         [FunctionName("DeleteVisit")]
