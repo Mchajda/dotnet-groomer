@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using dotnet_groomer.Models;
 using Newtonsoft.Json;
 using System.IO;
+using dotnet_groomer.Models.User;
 
 namespace dotnet_groomer.Functions
 {
@@ -48,7 +48,7 @@ namespace dotnet_groomer.Functions
             ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<User>(requestBody);
+            var data = JsonConvert.DeserializeObject<UserRequestBody>(requestBody);
 
             User user;
             try

@@ -1,4 +1,5 @@
 ﻿using dotnet_groomer.Models;
+using dotnet_groomer.Models.User;
 using dotnet_groomer.Models.Visit;
 using Microsoft.EntityFrameworkCore;
 

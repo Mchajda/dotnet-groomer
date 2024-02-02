@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dotnet_groomer.Models
+namespace dotnet_groomer.Models.User
 {
-    public class User
+    public class UserRequestBody
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
         public string Email { get; set; }
         public string Dog { get; set; }
-        
+
         [Column("visit_count")]
         public int VisitCount { get; set; }
 
