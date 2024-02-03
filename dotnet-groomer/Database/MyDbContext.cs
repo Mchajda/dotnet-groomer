@@ -35,5 +35,10 @@ public class MyDbContext : DbContext
             .HasOne(vp => vp.Product)
             .WithMany(p => p.VisitProducts)
             .HasForeignKey(vp => vp.ProductId);
+
+        modelBuilder.Entity<Visit>()
+            .HasOne(v => v.Customer) // Each visit has one customer
+            .WithMany(c => c.Visits) // A customer can have many visits
+            .HasForeignKey(v => v.CustomerId); // Foreign key in the Visit entity
     }
 }

@@ -12,6 +12,7 @@ using System.IO;
 using dotnet_groomer.Models.Visit;
 using dotnet_groomer.Models;
 using System.Linq;
+using dotnet_groomer.Models.User;
 
 namespace dotnet_groomer.Functions
 {
@@ -31,17 +32,42 @@ namespace dotnet_groomer.Functions
         {
             log.LogInformation("C# HTTP trigger function processed a request to fetch visits from MySQL.");
 
-            List<Visit> visits = null;
+            List<VisitDto> response = null;
             try
             {
-                visits = await _context.Visits.ToListAsync();
+                var visits = await _context.Visits
+                    .Include(v => v.Customer)
+                    .Include(v => v.VisitProducts)
+                        .ThenInclude(vp => vp.Product)
+                    .ToListAsync();
+
+                response = visits.Select(visit => new VisitDto
+                {
+                    Id = visit.Id,
+                    Title = visit.Title,
+                    Start = visit.Start,
+                    End = visit.End,
+                    PaymentCleared = visit.PaymentCleared,
+                    Products = visit?.VisitProducts.Select(vp => new ProductDto
+                    {
+                        Id = vp.Product.Id,
+                        Name = vp.Product.Name,
+                    }).ToList() ?? new(),
+                    Customer = new UserDto
+                    {
+                        Id = visit.Customer?.Id,
+                        Email = visit.Customer?.Email,
+                        Name = visit.Customer?.Name
+                    } ?? new(),
+                })
+                .ToList();
             }
             catch (Exception ex)
             {
                 return new NotFoundObjectResult(ex.Message);
             }
 
-            return new OkObjectResult(visits);
+            return new OkObjectResult(response);
         }
 
         [FunctionName("PostVisit")]
@@ -60,7 +86,8 @@ namespace dotnet_groomer.Functions
                     Start = data.Start,
                     End = data.End,
                     AllDay = data.AllDay,
-                    VisitProducts = new List<VisitProduct>()
+                    VisitProducts = new List<VisitProduct>(),
+                    CustomerId = data.Customer.Id,
                 };
 
                 if (data.ProductIds != null)

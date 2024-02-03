@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using dotnet_groomer.Models.Visit;
 
 namespace dotnet_groomer.Models.User
 {
@@ -15,5 +17,7 @@ namespace dotnet_groomer.Models.User
 
         [Column("phone_number")]
         public string PhoneNumber { get; set; }
+
+        public List<Visit.Visit> Visits { get; set; }
     }
 }
