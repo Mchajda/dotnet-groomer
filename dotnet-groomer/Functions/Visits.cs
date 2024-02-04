@@ -87,7 +87,8 @@ namespace dotnet_groomer.Functions
                     End = data.End,
                     AllDay = data.AllDay,
                     VisitProducts = new List<VisitProduct>(),
-                    CustomerId = data.Customer.Id,
+                    CustomerId = data?.Customer?.Id ?? null,
+                    Price = data.Price,
                 };
 
                 if (data.ProductIds != null)

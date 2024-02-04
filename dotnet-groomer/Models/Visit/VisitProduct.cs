@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace dotnet_groomer.Models.Visit
@@ -7,12 +8,11 @@ namespace dotnet_groomer.Models.Visit
     {
         [Column("visit_id")]
         public int VisitId { get; set; }
-
+        [JsonIgnore]
         public Visit Visit { get; set; }
-
         [Column("product_id")]
         public int ProductId { get; set; }
-
+        [JsonIgnore]
         public Product Product { get; set; }
 
     }
