@@ -61,6 +61,7 @@ namespace dotnet_groomer.Functions
                         Start = visit.Start,
                         End = visit.End,
                         PaymentCleared = visit.PaymentCleared,
+                        Price = visit.Price,
                         Products = visit?.VisitProducts.Select(vp => new ProductDto
                         {
                             Id = vp.Product.Id,
@@ -146,6 +147,7 @@ namespace dotnet_groomer.Functions
                 visit.End = data.End;
                 visit.AllDay = data.AllDay;
                 visit.PaymentCleared = data.PaymentCleared;
+                visit.Price = data.Price;
 
                 visit.VisitProducts.Clear();
 
