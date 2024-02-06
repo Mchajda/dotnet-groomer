@@ -41,24 +41,35 @@ namespace dotnet_groomer.Functions
                         .ThenInclude(vp => vp.Product)
                     .ToListAsync();
 
-                response = visits.Select(visit => new VisitDto
+                response = visits.Select(visit =>
                 {
-                    Id = visit.Id,
-                    Title = visit.Title,
-                    Start = visit.Start,
-                    End = visit.End,
-                    PaymentCleared = visit.PaymentCleared,
-                    Products = visit?.VisitProducts.Select(vp => new ProductDto
+                    UserDto userDto = null;
+                    if (visit.CustomerId != null)
                     {
-                        Id = vp.Product.Id,
-                        Name = vp.Product.Name,
-                    }).ToList() ?? new(),
-                    Customer = new UserDto
+                        userDto = new UserDto()
+                        {
+                            Id = visit.Customer?.Id,
+                            Email = visit.Customer?.Email,
+                            Name = visit.Customer?.Name
+                        };
+                    }
+                    
+                    return new VisitDto
                     {
-                        Id = visit.Customer?.Id,
-                        Email = visit.Customer?.Email,
-                        Name = visit.Customer?.Name
-                    } ?? new(),
+                        Id = visit.Id,
+                        Title = visit.Title,
+                        Start = visit.Start,
+                        End = visit.End,
+                        PaymentCleared = visit.PaymentCleared,
+                        Products = visit?.VisitProducts.Select(vp => new ProductDto
+                        {
+                            Id = vp.Product.Id,
+                            Name = vp.Product.Name,
+                            Price = vp.Product.Price,
+                            Time = vp.Product.Time,
+                        }).ToList() ?? new(),
+                        Customer = userDto,
+                    };
                 })
                 .ToList();
             }

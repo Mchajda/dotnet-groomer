@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IO;
 using dotnet_groomer.Models;
+using System.Linq;
 
 namespace dotnet_groomer.Functions
 {
@@ -29,10 +30,18 @@ namespace dotnet_groomer.Functions
         {
             log.LogInformation("C# HTTP trigger function processed a request to fetch products from MySQL.");
 
-            List<Product> products = null;
+            List<ProductDto> products = null;
             try
             {
-                products = await _context.Products.ToListAsync();
+                var dbProducts = await _context.Products.ToListAsync();
+
+                products = dbProducts.Select(product => new ProductDto
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Time = product.Time,
+                    Price = product.Price,
+                }).ToList();
             }
             catch (Exception ex)
             {

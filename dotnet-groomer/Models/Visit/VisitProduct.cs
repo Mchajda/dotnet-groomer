@@ -14,6 +14,5 @@ namespace dotnet_groomer.Models.Visit
         public int ProductId { get; set; }
         [JsonIgnore]
         public Product Product { get; set; }
-
     }
 }
