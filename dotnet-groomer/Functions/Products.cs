@@ -11,21 +11,24 @@ using Newtonsoft.Json;
 using System.IO;
 using dotnet_groomer.Models;
 using System.Linq;
+using dotnet_groomer.Repositories.Interfaces;
 
 namespace dotnet_groomer.Functions
 {
     public class Products
     {
         private readonly MyDbContext _context;
+        private readonly IProductRepository _repository;
 
-        public Products(MyDbContext context)
+        public Products(MyDbContext context, IProductRepository productRepository)
         {
             _context = context;
+            _repository = productRepository;
         }
 
         [FunctionName("GetProducts")]
         public async Task<IActionResult> GetProducts(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request to fetch products from MySQL.");
@@ -33,7 +36,7 @@ namespace dotnet_groomer.Functions
             List<ProductDto> products = null;
             try
             {
-                var dbProducts = await _context.Products.ToListAsync();
+                var dbProducts = await _repository.GetProducts();
 
                 products = dbProducts.Select(product => new ProductDto
                 {

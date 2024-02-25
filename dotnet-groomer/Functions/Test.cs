@@ -20,7 +20,7 @@ namespace dotnet_groomer.Functions
     {
         [FunctionName("Test")]
         public async Task<IActionResult> TestEndpoint(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "/Test")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Test")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request to test connection.");        
