@@ -1,0 +1,3 @@
+maciejowaty.pl {
+    reverse_proxy azure-function:80
+}
