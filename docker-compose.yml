@@ -21,6 +21,15 @@ services:
       MYSQL_DATABASE: dotnet_groomer
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+      # Custom MySQL settings for low-memory environments
+      MYSQLD_INNODB_BUFFER_POOL_SIZE: 64M
+      MYSQLD_INNODB_LOG_BUFFER_SIZE: 8M
+      MYSQLD_MAX_CONNECTIONS: 10
+      MYSQLD_TABLE_OPEN_CACHE: 400
+      MYSQLD_KEY_BUFFER_SIZE: 8M
+      MYSQLD_READ_BUFFER_SIZE: 1M
+      MYSQLD_SORT_BUFFER_SIZE: 2M
+      MYSQLD_JOIN_BUFFER_SIZE: 128K
     ports:
       - "3306:3306"
     volumes:
