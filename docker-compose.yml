@@ -11,6 +11,7 @@ services:
       AzureFunctionsJobHost__Logging__Console__IsEnabled: true
       AzureFunctionsJobHost__extensions__cors__allowedOrigins: "http://localhost:3000"
       AzureFunctionsJobHost__extensions__cors__supportCredentials: false
+    mem_limit: 256m
     env_file:
       - ./docker.env
 
@@ -30,6 +31,8 @@ services:
       MYSQLD_READ_BUFFER_SIZE: 1M
       MYSQLD_SORT_BUFFER_SIZE: 2M
       MYSQLD_JOIN_BUFFER_SIZE: 128K
+    mem_limit: 256m
+    restart: on-failure
     ports:
       - "3306:3306"
     volumes:
